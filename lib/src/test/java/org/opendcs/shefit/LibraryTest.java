@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -20,27 +21,20 @@ class LibraryTest {
 
     @BeforeEach
     public void setup() {
-        CharStream stream = CharStreams.fromString(".A TEST\r\n.A TEST2");
+        CharStream stream = CharStreams.fromString(".A TEST 20230318 Z DH000000\r\n.A TEST2 0318 Z DH000000");
         shefLexer l = new shefLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(l);
         shefParser p = new shefParser(tokens);
         p.setTrace(true);
         file = p.shefFile();
-    }
-
-    @Test
-    public void test_listener() {
-        
-        shefListener listener = new shefListener();
-        //System.out.println(p.a_FORMAT().getText());        
-        ParseTreeWalker.DEFAULT.walk(listener,file);
-
+        p.setErrorHandler(new BailErrorStrategy());
     }
 
     @Test
     public void test_visitor() {
-        AFormatVisitor visitor = new AFormatVisitor();
-        String ID = visitor.visitShefFile(file);
-        assertEquals("TEST",ID);
+        DataSet set = new DataSet();
+        ShefFileVisitor visitor = new ShefFileVisitor(set);
+        visitor.visitShefFile(file);
+        assertTrue(set.getData().containsKey("TEST"));
     }
 }
