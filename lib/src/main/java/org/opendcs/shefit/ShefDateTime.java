@@ -47,7 +47,7 @@ public class ShefDateTime {
                     break;   
                 }
                 default: {
-                    throw new RuntimeException("Date must be 4,6, or 8 digits.");
+                    throw new RuntimeException("Date must be 4,6, or 8 digits. Got '" + dateStr + "'.");
                 }
             }
             return LocalDate.of(year,month,day);

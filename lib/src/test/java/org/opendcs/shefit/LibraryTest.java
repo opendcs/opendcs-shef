@@ -21,7 +21,7 @@ class LibraryTest {
 
     @BeforeEach
     public void setup() {
-        CharStream stream = CharStreams.fromString(".A TEST 20230318 Z DH000000\r\n.A TEST2 0318 Z DH000000");
+        CharStream stream = CharStreams.fromString(".A TEST 20230318 Z DH000000 /HG 1.0\r\n.A TEST2 0318 Z DH000000 /HG 2.0 : Busted pulley.\r\n");
         shefLexer l = new shefLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(l);
         shefParser p = new shefParser(tokens);
@@ -35,6 +35,13 @@ class LibraryTest {
         DataSet set = new DataSet();
         ShefFileVisitor visitor = new ShefFileVisitor(set);
         visitor.visitShefFile(file);
-        assertTrue(set.getData().containsKey("TEST"));
+        boolean found = false;
+        for(ShefRecord r: set.getData()) {
+            System.out.println(r);
+            if( r.getStation().equals("TEST")) {
+                found = true;
+            }
+        }
+        assertTrue(found, "Could not find expected record.");
     }
 }
