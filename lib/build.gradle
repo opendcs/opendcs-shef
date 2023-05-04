@@ -58,3 +58,16 @@ generateGrammarSource {
     arguments += ["-visitor","-long-messages","-package","org.opendcs.shef.parser"]
     outputDirectory = file("${project.buildDir}/generated/sources/antlr/main/org/opendcs/shef/parser")
 }
+
+task grun(type: JavaExec) {
+    dependsOn compileJava
+    classpath += sourceSets.main.runtimeClasspath
+    classpath += fileTree(sourceSets.main.output.classesDirs.getAsPath())
+    classpath += configurations.antlr
+    main = "org.antlr.v4.gui.TestRig"
+    args += "org.opendcs.shef.parser.shef"
+    args += "shefFile"
+    args += "-tokens"
+    args += "-gui"
+    args += "src/test/resources/a.shef"
+}

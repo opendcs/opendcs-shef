@@ -30,7 +30,9 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
             comment = ctx.COMMENT().getText().substring(1).trim();
         }
         this.currentValueA = new ShefRecord.Builder(ctx.ID().getText())
-                                           .withComment(comment);
+                                           .withComment(comment)
+                                           .withRevisionStatus(ctx.REVISED() != null);
+                                           
         DataSet visitChildren = visitChildren(ctx);
         System.out.println("ZonedDT: " + currentValueA.build().getObservationTime().format(DateTimeFormatter.ISO_DATE_TIME));
         return visitChildren;
@@ -55,8 +57,8 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
     @Override
     public DataSet visitTime(shefParser.TimeContext ctx) {
         System.out.println("TIME: " + ctx.getText());
-        System.out.println("FIXED TIME: " + ctx.FixedTime().getText());
-        boolean fixed = ctx.FixedTime() == null;
+        System.out.println("FIXED TIME: " + ctx.FIXED_TIME().getText());
+        boolean fixed = ctx.FIXED_TIME() == null;
         String timeStr = ctx.getText();
         ShefTime time;
         if (fixed) {
@@ -70,7 +72,7 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
 
     @Override
     public DataSet visitValue(shefParser.ValueContext ctx) {
-        String sensorCode = ctx.VALUE_MARKER().getText();
+        String sensorCode = ctx.PHYSICAL_ELEMENT().getText();
         String valueString = ctx.NUMBER().getText();
         String peCode = sensorCode.substring(0,2);
         Double value = null;

@@ -11,7 +11,6 @@ import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.opendcs.shef.parser.*;
 import org.opendcs.shef.parser.shefParser.ShefFileContext;
 
@@ -21,13 +20,13 @@ class LibraryTest {
 
     @BeforeEach
     public void setup() {
-        CharStream stream = CharStreams.fromString(".A TEST 20230318 Z DH000000 /HG 1.0\r\n.A TEST2 0318 Z DH000000 /HG 2.0 : Busted pulley.\r\n");
+        CharStream stream = CharStreams.fromString(".AR TEST 20230318 Z DH000000 /HG 1.0\r\n.A TEST2 0318 Z DH000000 /HG 2.0 : Busted pulley.\r\n");
         shefLexer l = new shefLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(l);
         shefParser p = new shefParser(tokens);
         p.setTrace(true);
-        file = p.shefFile();
         p.setErrorHandler(new BailErrorStrategy());
+        file = p.shefFile();
     }
 
     @Test
