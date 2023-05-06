@@ -31,7 +31,7 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
         }
         this.currentValueA = new ShefRecord.Builder(ctx.ID().getText())
                                            .withComment(comment)
-                                           .withRevisionStatus(ctx.REVISED() != null);
+                                           .withRevisionStatus(false /*ctx.REVISED() != null*/);
                                            
         DataSet visitChildren = visitChildren(ctx);
         System.out.println("ZonedDT: " + currentValueA.build().getObservationTime().format(DateTimeFormatter.ISO_DATE_TIME));
@@ -55,17 +55,11 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
     }
 
     @Override
-    public DataSet visitTime(shefParser.TimeContext ctx) {
+    public DataSet visitFIXED_TIME(shefParser.FIXED_TIMEContext ctx) {
+        
         System.out.println("TIME: " + ctx.getText());
-        System.out.println("FIXED TIME: " + ctx.FIXED_TIME().getText());
-        boolean fixed = ctx.FIXED_TIME() == null;
         String timeStr = ctx.getText();
-        ShefTime time;
-        if (fixed) {
-            time = new ShefTime(fixed, timeStr.substring(0,1),timeStr.substring(2));
-        } else {
-            time = new ShefTime(fixed, timeStr.substring(0,2),timeStr.substring(3));
-        }
+        ShefTime time = new ShefTime(true, timeStr.substring(0,1),timeStr.substring(2));
         currentValueA.withObservationTime(new ShefDateTime(curDateA, "UTC", time).getZonedDateTime());
         return visitChildren(ctx);
     }

@@ -20,7 +20,7 @@ class LibraryTest {
 
     @BeforeEach
     public void setup() {
-        CharStream stream = CharStreams.fromString(".AR TEST 20230318 Z DH000000 /HG 1.0\r\n.A TEST2 0318 Z DH000000 /HG 2.0 : Busted pulley.\r\n");
+        CharStream stream = CharStreams.fromString(".A TEST 20230318 Z DH010203 /HG 1.0\r\n.A TEST2 0318 Z DH050607 /HG 2.0 : Busted pulley.\r\n");
         shefLexer l = new shefLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(l);
         shefParser p = new shefParser(tokens);
