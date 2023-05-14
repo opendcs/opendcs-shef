@@ -8,10 +8,11 @@ shefFile: shefFormatStatement+;
 shefFormatStatement: a_FORMAT;
 
 // SHEF .A statements
-a_FORMAT: A_FORMAT ID DATE TIMEZONE? (field)+ ;
-//a_FORMAT_CONTINUATION: A_CONTINUATION (field)+;
+a_FORMAT: A_FORMAT ID DATE TIMEZONE? field (SLASH field)* ;
 
+field: peField
+     | timeField;
 
-field: (peField|timeField) SLASH?;
-peField: PHYSICAL_ELEMENT NUMBER;
-timeField: TIME_TYPES NUMBER SLASH;
+peField: PHYSICAL_ELEMENT NUMBER?; // ELEMENT WITH NO number is "missing value"
+
+timeField: TIME_TYPES NUMBER ;
