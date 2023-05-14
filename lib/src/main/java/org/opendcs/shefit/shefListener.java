@@ -6,7 +6,7 @@ package org.opendcs.shefit;
 import org.opendcs.shef.parser.shefBaseListener;
 import org.opendcs.shef.parser.shefParser;
 
-public class shefListener extends shefBaseListener {    
+public class shefListener extends shefBaseListener {
     @Override
     public void enterShefFile(shefParser.ShefFileContext ctx) {
         System.out.println("Starting shef file.");

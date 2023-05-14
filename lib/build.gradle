@@ -61,6 +61,7 @@ generateGrammarSource {
 
 task grun(type: JavaExec) {
     dependsOn compileJava
+    dependsOn generateGrammarSource
     classpath += sourceSets.main.runtimeClasspath
     classpath += fileTree(sourceSets.main.output.classesDirs.getAsPath())
     classpath += configurations.antlr
@@ -68,6 +69,8 @@ task grun(type: JavaExec) {
     args += "org.opendcs.shef.parser.shef"
     args += "shefFile"
     args += "-tokens"
+    args += "-trace"
+    args += "-diagnostics"
     args += "-gui"
-    args += "src/test/resources/a.shef"
+    args += "src/test/resources/original_a_only.shef"
 }

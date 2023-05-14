@@ -16,7 +16,7 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
     public ShefFileVisitor(DataSet dataSet) {
         this.dataSet = dataSet;
     }
-
+    /*
     @Override
     public DataSet visitShefFormatStatement(shefParser.ShefFormatStatementContext ctx) {
         System.out.println("Processing " + ctx.getText());
@@ -31,27 +31,11 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
         }
         this.currentValueA = new ShefRecord.Builder(ctx.ID().getText())
                                            .withComment(comment)
-                                           .withRevisionStatus(false /*ctx.REVISED() != null*/);
-                                           
+                                           .withRevisionStatus(false);
+        curDateA = new ShefDate(ctx.DATE().getText());
         DataSet visitChildren = visitChildren(ctx);
         System.out.println("ZonedDT: " + currentValueA.build().getObservationTime().format(DateTimeFormatter.ISO_DATE_TIME));
         return visitChildren;
-    }
-
-    @Override
-    public DataSet visitObservationTime(shefParser.ObservationTimeContext ctx) {
-        
-        //ctx.DATE().getSymbol().equals(shefLexer.)
-        return visitChildren(ctx);
-    }
-
-    @Override
-    public DataSet visitDate(shefParser.DateContext ctx) {
-        System.out.println("FULL : " + (ctx.FULLDATE() == null));
-        System.out.println("SHORT : " + (ctx.SHORT_DATE() == null));
-        System.out.println("VERY : " + (ctx.VERY_SHORT_DATE() == null));
-        curDateA = new ShefDate(ctx.getText());
-        return visitChildren(ctx);
     }
 
     @Override
@@ -73,7 +57,7 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
         try {
             value = Double.parseDouble(valueString);
         } catch (NumberFormatException nfe) {
-            /** missing value stays as null*/
+            // missing value stays as null
         }
         
         this.currentValueA.withValue(value);
@@ -81,4 +65,5 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
         this.dataSet.addValue(this.currentValueA.build());
         return this.dataSet;
     }
+    */
 }
