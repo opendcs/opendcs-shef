@@ -29,16 +29,17 @@ WS_ID: WS -> skip;
 mode PROCESS_DATE;
 WS_PD: WS -> skip;
 //      century       decade
-DATE: ((DIGIT DIGIT)? DIGIT DIGIT)? MONTH DAY /*WS+*/;
-TIMEZONE: [A-Z] [PD]? /*WS+*/ -> mode(A_FIELDS);
+DATE: ((DIGIT DIGIT)? DIGIT DIGIT)? MONTH DAY WS_PD+;
+TIMEZONE: [A-Z] [PD]? WS_PD+ -> mode(A_FIELDS);
 TO_FIELDS: . -> more, mode(A_FIELDS);
 
 mode A_FIELDS;
 COMMENT_FIELDS: ':' -> more, pushMode(COMMENT_MODE);
 A_CONTINUATION: '.A' 'R'? DIGIT+ -> skip;
-PHYSICAL_ELEMENT: [A-CE-Z] LETTER; // D is reserved for the date fields
+                    // HGIRVZ5
+PHYSICAL_ELEMENT: [A-CE-Z] LETTER ((LETTER|DIGIT) ((LETTER|DIGIT) ((LETTER|DIGIT) ((LETTER|DIGIT) (LETTER|DIGIT)?)?)?)?)?; // D is reserved for the date fields
 TIME_TYPES: 'D' 'R'? [A-Z];
-SLASH: THE_SLASH;
+SLASH: THE_SLASH -> skip;
 NUMBER: '-'? DIGIT+ ('.' DIGIT+)?;
 WS_FIELDS: WS -> skip;
 FIELD_A_FORMAT: A_FORMAT_STR -> type(A_FORMAT), mode(LOCID);

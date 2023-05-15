@@ -2,17 +2,17 @@ grammar shef;
 
 options {tokenVocab=shefLexer;}
 // The file itself
-shefFile: shefFormatStatement+;
+shefFile: shefFormatStatement*;
 
 // the set of statements in the file.
 shefFormatStatement: a_FORMAT;
 
 // SHEF .A statements
-a_FORMAT: A_FORMAT ID DATE TIMEZONE? field (SLASH field)* ;
+a_FORMAT: A_FORMAT ID DATE TIMEZONE? field (/*SLASH*/ field)* ;
 
-field: peField
-     | timeField;
+field: peField;
+//     | timeField;
 
-peField: PHYSICAL_ELEMENT NUMBER?; // ELEMENT WITH NO number is "missing value"
+peField: (TIME_TYPES NUMBER)? PHYSICAL_ELEMENT NUMBER?; // ELEMENT WITH NO number is "missing value"
 
-timeField: TIME_TYPES NUMBER ;
+//timeField: TIME_TYPES NUMBER ;
