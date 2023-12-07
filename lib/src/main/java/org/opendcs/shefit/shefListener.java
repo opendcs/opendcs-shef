@@ -7,6 +7,7 @@ import org.opendcs.shef.parser.shefBaseListener;
 import org.opendcs.shef.parser.shefParser;
 
 public class shefListener extends shefBaseListener {
+    
     @Override
     public void enterShefFile(shefParser.ShefFileContext ctx) {
         System.out.println("Starting shef file.");
@@ -14,6 +15,7 @@ public class shefListener extends shefBaseListener {
 
     @Override 
     public void exitA_FORMAT(shefParser.A_FORMATContext ctx) { 
-        System.out.println("A Format block: " + ctx.ID().getText());
+        System.out.println("A Format block: " + ctx.getText());
     }
+
 }

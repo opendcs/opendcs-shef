@@ -3,7 +3,7 @@ package org.opendcs.shefit;
 import java.time.format.DateTimeFormatter;
 
 import org.opendcs.shef.parser.shefBaseVisitor;
-import org.opendcs.shef.parser.shefParser;
+//import org.opendcs.shef.parser.shefParser;
 import org.opendcs.shefit.ShefDateTime.ShefDate;
 import org.opendcs.shefit.ShefDateTime.ShefTime;
 

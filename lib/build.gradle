@@ -72,5 +72,6 @@ task grun(type: JavaExec) {
     args += "-trace"
     args += "-diagnostics"
     args += "-gui"
-    args += "src/test/resources/original_a_only.shef"
+    //args += "src/test/resources/original_a_only.shef"
+    args += "src/test/resources/a.shef"
 }
