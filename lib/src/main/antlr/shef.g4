@@ -9,11 +9,11 @@ shefFormatStatement: a_FORMAT;
 
 // SHEF .A statements
 a_FORMAT: A_FORMAT locid date tz? field (SLASH field)* SLASH*
-        (A_FORMAT_CONT field (SLASH field)* SLASH*)*;
+        (A_FORMAT_CONT SLASH? field (SLASH field)* SLASH*)*;
 
 locid: IDENTIFIER # ID;
 date: NUMBER # DATE;
 tz: IDENTIFIER # TZ;
-field: IDENTIFIER NUMBER? # PEFIELD
-     | DATEFIELD # FIELD;
+field: IDENTIFIER NUMBER? DATACOMMENT? # PEFIELD
+     | IDENTIFIER # TIMEFIELD;
 
