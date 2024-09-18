@@ -3,28 +3,58 @@
  */
 package org.opendcs.shefit;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.opendcs.shef.parser.shefBaseListener;
 import org.opendcs.shef.parser.shefParser;
 
 public class shefListener extends shefBaseListener {
-    
+    CharStream stream;
+    String line;
     @Override
     public void enterShefFile(shefParser.ShefFileContext ctx) {
         System.out.println("Starting shef file.");
+        stream = ctx.start.getInputStream();
     }
 
     @Override
     public void enterA_FORMAT(shefParser.A_FORMATContext ctx) {
-        System.out.println("Within an A format " + ctx.toStringTree());
+        Interval interval = new Interval(ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex());
+        line = stream.getText(interval);
+        
     }
 
     @Override 
     public void exitA_FORMAT(shefParser.A_FORMATContext ctx) { 
+        //System.out.println("Finished A format.");
+    }
+
+    @Override
+    public void enterE_FORMAT(shefParser.E_FORMATContext ctx) {
+        //System.out.println("Within an E format " + ctx.toStringTree());
+    }
+
+    @Override 
+    public void exitE_FORMAT(shefParser.E_FORMATContext ctx) { 
+        //System.out.println("Finished E format.");
     }
 
     @Override
     public void visitErrorNode(ErrorNode node) {
-        System.out.println("Error on : " + node.getText() + ", Tree = " + node.toStringTree());
+        Token tkn = node.getSymbol();        
+        ParseTree tree = node.getParent();
+        Object payload = node.getPayload();
+        System.out.println(line);
+        for (int i = 0; i < tkn.getCharPositionInLine()-1;i++)
+        {
+            System.out.print(" ");
+        }
+        System.out.println("^");
+        System.out.println("Error " + tkn.getLine() + ":" 
+                                    + tkn.getCharPositionInLine());
+        
     }
 }

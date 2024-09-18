@@ -27,8 +27,9 @@ class LibraryTest {
         shefLexer l = new shefLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(l);
         shefParser p = new shefParser(tokens);
-        p.setTrace(true);
-        p.setErrorHandler(new DefaultErrorStrategy());
+        p.setTrace(false);
+        //p.setErrorHandler(new DefaultErrorStrategy());
+        //p.setErrorHandler(new BailErrorStrategry());
         file = p.shefFile();
     }
 
