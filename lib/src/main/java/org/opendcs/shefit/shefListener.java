@@ -3,6 +3,7 @@
  */
 package org.opendcs.shefit;
 
+import org.antlr.v4.runtime.tree.ErrorNode;
 import org.opendcs.shef.parser.shefBaseListener;
 import org.opendcs.shef.parser.shefParser;
 
@@ -13,9 +14,17 @@ public class shefListener extends shefBaseListener {
         System.out.println("Starting shef file.");
     }
 
-    @Override 
-    public void exitA_FORMAT(shefParser.A_FORMATContext ctx) { 
-        System.out.println("A Format block: " + ctx.getText());
+    @Override
+    public void enterA_FORMAT(shefParser.A_FORMATContext ctx) {
+        System.out.println("Within an A format " + ctx.toStringTree());
     }
 
+    @Override 
+    public void exitA_FORMAT(shefParser.A_FORMATContext ctx) { 
+    }
+
+    @Override
+    public void visitErrorNode(ErrorNode node) {
+        System.out.println("Error on : " + node.getText() + ", Tree = " + node.toStringTree());
+    }
 }

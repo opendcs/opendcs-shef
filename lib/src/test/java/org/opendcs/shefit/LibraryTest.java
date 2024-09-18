@@ -11,6 +11,8 @@ import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.DefaultErrorStrategy;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.opendcs.shef.parser.*;
 import org.opendcs.shef.parser.shefParser.ShefFileContext;
 
@@ -19,13 +21,14 @@ class LibraryTest {
     private ShefFileContext file;
 
     @BeforeEach
-    public void setup() {
-        CharStream stream = CharStreams.fromString(".A TEST 20230318 Z DH010203 /HG 1.0\r\n.A TEST2 0318 Z DH050607 /HG 2.0 : Busted pulley.\r\n");
+    public void setup() throws Exception {        
+        //CharStream stream = CharStreams.fromString(".A TEST 20230318 Z DH010203 /HG 1.0\r\n.A TEST2 0318 Z DH050607 /HG 2.0 : Busted pulley.\r\n");
+        CharStream stream = CharStreams.fromStream(this.getClass().getResourceAsStream("/original_a_only.shef"));
         shefLexer l = new shefLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(l);
         shefParser p = new shefParser(tokens);
         p.setTrace(true);
-        p.setErrorHandler(new BailErrorStrategy());
+        p.setErrorHandler(new DefaultErrorStrategy());
         file = p.shefFile();
     }
 
@@ -42,5 +45,11 @@ class LibraryTest {
             }
         }
         assertTrue(found, "Could not find expected record.");
+    }
+
+    @Test
+    public void test_listener() {
+        shefListener listener = new shefListener();
+        ParseTreeWalker.DEFAULT.walk(listener, file);
     }
 }
