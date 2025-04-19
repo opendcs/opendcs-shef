@@ -41,7 +41,7 @@ class LibraryTest {
         boolean found = false;
         for(ShefRecord r: set.getData()) {
             System.out.println(r);
-            if( r.getStation().equals("TEST")) {
+            if( r.getStation().equals("AA0104")) {
                 found = true;
             }
         }

@@ -1,0 +1,52 @@
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'jacoco'
+}
+
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    options.compilerArgs << '-parameters'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    options.compilerArgs << '-parameters'
+}
+
+
+dependencies {
+    testRuntimeOnly(libs.slf4j.simple)
+    testImplementation(libs.junit.jupiter)
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+    testLogging {
+        events "passed","skipped","failed"
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.9"
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+}

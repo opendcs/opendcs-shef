@@ -7,37 +7,18 @@
  */
 
 plugins {
-    // Apply the java-library plugin for API and implementation separation.
-    id 'java-library'
+    id 'shef.deps-conventions'
+    id 'shef.java-conventions'
     id 'antlr'
 }
 
-repositories {
-    // Use Maven Central for resolving dependencies.
-    mavenCentral()
-}
-
 dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation 'com.google.guava:guava:30.1.1-jre'
-    antlr "org.antlr:antlr4:4.12.0"
+    implementation(libs.com.google.guava)
+    antlr(libs.org.antlr.antlr4)
 
-    api "org.antlr:antlr4-runtime:4.12.0"
-}
-
-tasks.named('test') {
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
-    testLogging {
-        events "passed","skipped","failed"
-    }
-}
-
-tasks.named('compileJava').configure {
-    dependsOn generateGrammarSource
+    api(libs.org.antlr.antlr4.runtime)
 }
 
 sourceSets {
@@ -48,16 +29,12 @@ sourceSets {
     }
 }
 
-java {
-    sourceCompatibility "1.8"
-    targetCompatibility "1.8"
-}
-
-
 generateGrammarSource {
     arguments += ["-visitor","-long-messages","-package","org.opendcs.shef.parser"]
     outputDirectory = file("${project.buildDir}/generated/sources/antlr/main/org/opendcs/shef/parser")
 }
+
+sourcesJar.dependsOn generateGrammarSource
 
 task grun(type: JavaExec) {
     dependsOn compileJava
