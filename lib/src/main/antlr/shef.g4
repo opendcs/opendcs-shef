@@ -8,15 +8,16 @@ shefFile: shefFormatStatement* EOF;
 shefFormatStatement: a_FORMAT | e_FORMAT;
 
 // SHEF .A statements
-a_FORMAT: A_FORMAT locid date tz? field (SLASH field)* SLASH*
-        (A_FORMAT_CONT SLASH? field (SLASH field)* SLASH*)*;
+a_FORMAT: A_FORMAT locid date tz? field (SLASH field|A_FORMAT_CONT|field|SLASH)*;
 
-e_FORMAT: E_FORMAT locid date tz? field (SLASH field)* SLASH*
-        (E_FORMAT_CONT SLASH? field (SLASH field)* SLASH*)*;
+e_FORMAT: E_FORMAT locid date tz? field (SLASH field|E_FORMAT_CONT|field|SLASH)*;
+
 
 locid: IDENTIFIER # ID;
 date: NUMBER # DATE;
 tz: IDENTIFIER # TZ;
 field: IDENTIFIER NUMBER? DATACOMMENT? # PEFIELD
      | IDENTIFIER # TIMEFIELD
-     | NUMBER? # VALUE;
+     | NUMBER # VALUE
+     | LETTERS # VALUE;
+

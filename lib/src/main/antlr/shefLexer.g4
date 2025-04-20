@@ -18,6 +18,7 @@ DATACOMMENT2_START: '\'' -> more, pushMode(DATACOMMENT2_MODE);
 NEWLINE: [\r?\n]+ -> skip;
 WS_DEF: WS -> skip;
 SLASH: '/';
+LETTERS: (LETTER|LOWER_LETTER);
 fragment ID_CHAR: (ALPHA|DIGIT|'_'|'-');
 fragment WS: [\p{White_Space}]+;
 fragment LETTER: [A-Z];
