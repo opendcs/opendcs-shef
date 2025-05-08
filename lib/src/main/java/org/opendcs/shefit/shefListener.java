@@ -29,17 +29,20 @@ public class shefListener extends shefBaseListener {
 
     @Override 
     public void exitA_FORMAT(shefParser.A_FORMATContext ctx) { 
-        //System.out.println("Finished A format.");
+        System.out.println("Finished A format." + line);
+    
     }
 
     @Override
     public void enterE_FORMAT(shefParser.E_FORMATContext ctx) {
-        //System.out.println("Within an E format " + ctx.toStringTree());
+        Interval interval = new Interval(ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex());
+        line = stream.getText(interval);
+        System.out.println("Within an E format ");
     }
 
     @Override 
     public void exitE_FORMAT(shefParser.E_FORMATContext ctx) { 
-        //System.out.println("Finished E format.");
+        System.out.println("Finished E format." + line);
     }
 
     @Override

@@ -23,7 +23,7 @@ class LibraryTest {
     @BeforeEach
     public void setup() throws Exception {        
         //CharStream stream = CharStreams.fromString(".A TEST 20230318 Z DH010203 /HG 1.0\r\n.A TEST2 0318 Z DH050607 /HG 2.0 : Busted pulley.\r\n");
-        CharStream stream = CharStreams.fromStream(this.getClass().getResourceAsStream("/original_a_only.shef"));
+        CharStream stream = CharStreams.fromStream(this.getClass().getResourceAsStream("/mixed.shef"));
         shefLexer l = new shefLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(l);
         shefParser p = new shefParser(tokens);
@@ -40,8 +40,8 @@ class LibraryTest {
         visitor.visitShefFile(file);
         boolean found = false;
         for(ShefRecord r: set.getData()) {
-            System.out.println(r);
-            if( r.getStation().equals("AA0104")) {
+            System.out.println("rec: " + r);
+            if( r.getStation().equals("TEST")) {
                 found = true;
             }
         }
