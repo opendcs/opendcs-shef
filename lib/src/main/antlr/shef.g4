@@ -24,7 +24,7 @@ date: NUMBER # DATE;
 tz: IDENTIFIER # TZ;
 value: NUMBER DATACOMMENT? # B_VALUE
       | LETTER DATACOMMENT? # B_VALUE;
-field: IDENTIFIER # TIMEFIELD // it appears not practical to separate here the date fields from data fields.
+field: IDENTIFIER # FIELD
+     | (IDENTIFIER NUMBER? DATACOMMENT?) # FIELD
      | NUMBER # VALUE
-     | LETTERS # VALUE
-     | IDENTIFIER (NUMBER|LETTERS) DATACOMMENT? # PEFIELD;
+     | LETTERS # VALUE;

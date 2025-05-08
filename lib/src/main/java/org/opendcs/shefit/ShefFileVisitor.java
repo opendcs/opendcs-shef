@@ -1,11 +1,13 @@
 package org.opendcs.shefit;
 
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.opendcs.shef.parser.shefBaseVisitor;
 import org.opendcs.shef.parser.shefParser;
+import org.opendcs.shef.parser.shefParser.FIELDContext;
 import org.opendcs.shef.parser.shefParser.FieldContext;
-import org.opendcs.shef.parser.shefParser.TIMEFIELDContext;
 import org.opendcs.shefit.ShefDateTime.ShefDate;
 import org.opendcs.shefit.ShefDateTime.ShefTime;
 
@@ -49,13 +51,18 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
     }
 
     @Override
-    public DataSet visitTIMEFIELD(TIMEFIELDContext ctx) {
+    public DataSet visitFIELD(FIELDContext ctx) {
         final String dateString = ctx.getText();
-        System.out.println("TIMEFIELD: " + dateString);
-        String parts[] = dateString.split("([a-zA-Z][a-z-A-Z]+)(\\d+)");
-        ShefDateTime.ShefTime dt = new ShefDateTime.ShefTime(true, parts[0], parts[1]);
-
-        currentValueA.withObservationTime(new ShefDateTime(curDateA, currentTz != null ? currentTz : "UTC", dt).getZonedDateTime());
+        if (dateString.startsWith("D")) {
+            System.out.println("FIELD: " + dateString);
+            Pattern pattern = Pattern.compile("(D[a-zA-Z]+)([0-9]+)");
+            Matcher matcher = pattern.matcher(dateString);
+            matcher.matches();
+            System.out.println(matcher.toString());
+                        
+            ShefDateTime.ShefTime dt = new ShefDateTime.ShefTime(true, matcher.group(1), matcher.group(2));
+            currentValueA.withObservationTime(new ShefDateTime(curDateA, currentTz != null ? currentTz : "UTC", dt).getZonedDateTime());
+        }
         return dataSet;
     }
 
