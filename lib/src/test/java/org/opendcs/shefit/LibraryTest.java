@@ -48,9 +48,19 @@ class LibraryTest {
         assertTrue(found, "Could not find expected record.");
     }
 
+
     @Test
-    public void test_listener() {
-        shefListener listener = new shefListener();
-        ParseTreeWalker.DEFAULT.walk(listener, file);
+    public void test_e_format() {
+        DataSet set = new DataSet();
+        ShefFileVisitor visitor = new ShefFileVisitor(set);
+        visitor.visitShefFile(file);
+        boolean found = false;
+        for(ShefRecord r: set.getData()) {
+            System.out.println("rec: " + r);
+            if( r.getStation().equals("EE0001")) {
+                found = true;
+            }
+        }
+        assertTrue(found, "Could not find expected record.");
     }
 }

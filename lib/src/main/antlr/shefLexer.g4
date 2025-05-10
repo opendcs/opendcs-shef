@@ -11,7 +11,7 @@ A_FORMAT: '.A' 'R'? ' ' -> pushMode(AE_MODE);
 E_FORMAT_CONT:  '.E' 'R'? DIGIT+ -> pushMode(AE_MODE);
 E_FORMAT: '.E' 'R'? ' ' -> pushMode(AE_MODE);
 COMMENT: COMMENT_START -> more, pushMode(COMMENT_MODE);
-JUNK_TEXT: .? -> skip;
+JUNK_TEXT: .+? -> skip;
 fragment COMMENT_START: ':';
 fragment DATACOMMENT_START: '"';
 fragment DATACOMMENT2_START: '\'';
@@ -66,13 +66,13 @@ BD_DATACOMMENT2_START: DATACOMMENT2_START -> more, pushMode(DATACOMMENT2_MODE);
 BD_WS: ALL_WS -> skip;
 
 mode COMMENT_MODE_IN_B;
-B_COMMENT_NL: NEWLINE -> more, type(COMMENT), channel(HIDDEN), popMode;
+B_COMMENT_NL: NEWLINE -> type(COMMENT), channel(HIDDEN), popMode;
 B_COMMENT_CHAR: ':' -> type(COMMENT), channel(HIDDEN), popMode;
 B_TEXT: . -> more;
 
 
 mode COMMENT_MODE;
-COMMENT_NL: NEWLINE -> more, type(COMMENT), channel(HIDDEN), mode(DEFAULT_MODE);
+COMMENT_NL: NEWLINE -> type(COMMENT), channel(HIDDEN), mode(DEFAULT_MODE);
 COMMENT_CHAR: ':' -> type(COMMENT), channel(HIDDEN), popMode;
 TEXT: . -> more;
 

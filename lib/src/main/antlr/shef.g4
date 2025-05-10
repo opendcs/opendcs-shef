@@ -10,7 +10,7 @@ shefFormatStatement: a_FORMAT | e_FORMAT | b_FORMAT;
 // SHEF .A statements
 a_FORMAT: A_FORMAT locid date tz? field (SLASH field|A_FORMAT_CONT|field|SLASH)*;
 
-e_FORMAT: E_FORMAT locid date tz? field (SLASH field|E_FORMAT_CONT|field|SLASH)*;
+e_FORMAT: E_FORMAT locid date tz? field (SLASH (field|value)|E_FORMAT_CONT|(field|value)|SLASH)*;
 
 b_FORMAT: B_FORMAT locid date tz? b_header b_data*;
 //field (SLASH field|field|SLASH)*
@@ -23,8 +23,9 @@ locid: IDENTIFIER # ID;
 date: NUMBER # DATE;
 tz: IDENTIFIER # TZ;
 value: NUMBER DATACOMMENT? # B_VALUE
-      | LETTER DATACOMMENT? # B_VALUE;
-field: IDENTIFIER # FIELD
-     | (IDENTIFIER NUMBER? DATACOMMENT?) # FIELD
-     | NUMBER # VALUE
-     | LETTERS # VALUE;
+     | LETTER DATACOMMENT? # B_VALUE;
+//field: IDENTIFIER # FIELD
+//     | (IDENTIFIER NUMBER? DATACOMMENT?) # FIELD
+//     | NUMBER # VALUE
+//     | LETTER # VALUE;
+field: IDENTIFIER (NUMBER|LETTER)? DATACOMMENT? # FIELD;

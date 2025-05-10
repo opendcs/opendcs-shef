@@ -19,7 +19,7 @@ public class ShefDateTime {
     public ZonedDateTime getZonedDateTime() {
         LocalDate localDate = date.getLocalDate();
         LocalTime localTime = time.getTime();
-        return ZonedDateTime.of(localDate,localTime,ZoneId.of("UTC"));
+        return ZonedDateTime.of(localDate,localTime,ZoneId.of(timeZone));
     }
 
     public static class ShefDate {
@@ -79,8 +79,15 @@ public class ShefDateTime {
 
         public LocalTime getTime() {
             int hours = Integer.parseInt(time.substring(0, 2),10);
-            int minutes = Integer.parseInt(time.substring(2, 4),10);
-            int seconds = Integer.parseInt(time.substring(4),10);
+            int minutes = 0;
+            int seconds = 0;
+            if (time.length() >= 4) {
+                minutes = Integer.parseInt(time.substring(2, 4),10);
+            }
+            if (time.length() >= 6) {
+                seconds = Integer.parseInt(time.substring(4),10);
+            }
+            
             return LocalTime.of(hours,minutes,seconds);
         }
     }
