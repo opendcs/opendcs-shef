@@ -10,14 +10,16 @@ import org.opendcs.shef.parser.shefParser;
 import org.opendcs.shef.parser.shefParser.E_FORMATContext;
 import org.opendcs.shef.parser.shefParser.FIELDContext;
 import org.opendcs.shef.parser.shefParser.FieldContext;
-import org.opendcs.shefit.ShefDateTime.ShefDate;
+import org.opendcs.shefit.time.ShefDate;
+import org.opendcs.shefit.time.ShefDateTime;
+import org.opendcs.shefit.time.ShefTime;
 
 public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
 
     private DataSet dataSet;
     private ShefRecord.Builder currentValue = null;
     
-    private ShefDateTime.ShefDate curDate;
+    private ShefDate curDate;
     private String currentTz = null;
     private Duration currentInterval = null;
 
@@ -57,13 +59,13 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
     @Override
     public DataSet visitFIELD(FIELDContext ctx) {
         final String dateString = ctx.getText();
-        if (dateString.startsWith("DH")) {
+        if (dateString.startsWith("D")) {
             System.out.println("FIELD: " + dateString);
             Pattern pattern = Pattern.compile("(D[a-zA-Z]+)([0-9]+)");
             Matcher matcher = pattern.matcher(dateString);
             matcher.matches();
                         
-            ShefDateTime.ShefTime dt = new ShefDateTime.ShefTime(true, matcher.group(1), matcher.group(2));
+            ShefTime dt = ShefTime.from(dateString);
             currentValue.withObservationTime(new ShefDateTime(curDate, currentTz != null ? currentTz : "UTC", dt).getZonedDateTime());
         } else {
             System.out.println("Data FIELD: " + dateString);
@@ -81,7 +83,7 @@ public class ShefFileVisitor extends shefBaseVisitor<DataSet>{
     @Override
     public DataSet visitE_FORMAT(E_FORMATContext ctx) {
         String comment = null;
-        System.out.println(ctx.E_FORMAT().getText());
+        System.out.println("E format: " + ctx.E_FORMAT().getText());
         this.currentValue = new ShefRecord.Builder(ctx.locid().getText())
                                            .withComment(comment)
                                            .withRevisionStatus(ctx.E_FORMAT().getText().endsWith("R"))
