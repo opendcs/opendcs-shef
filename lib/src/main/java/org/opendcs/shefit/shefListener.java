@@ -3,15 +3,29 @@
  */
 package org.opendcs.shefit;
 
+import java.text.ParseException;
+import java.time.DateTimeException;
+
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.opendcs.shef.parser.shefBaseListener;
 import org.opendcs.shef.parser.shefParser;
+import org.opendcs.shefit.ShefDateTime.ShefTime;
 
 public class shefListener extends shefBaseListener {
+
+
+    private DataSet dataSet;
+    private ShefRecord.Builder currentValueA = null;
+    private ShefDateTime.ShefDate curDateA;
+    private String tz = null;
+
+    public shefListener(DataSet dataSet) {
+        this.dataSet = dataSet;
+    }
+
     CharStream stream;
     String line;
     @Override
@@ -21,15 +35,67 @@ public class shefListener extends shefBaseListener {
     }
 
     @Override
+    public void exitShefFormatStatement(shefParser.ShefFormatStatementContext ctx) {
+        
+        if (currentValueA != null) {
+            dataSet.addValue(currentValueA.build());
+        }
+    }
+
+    @Override
     public void enterA_FORMAT(shefParser.A_FORMATContext ctx) {
-        Interval interval = new Interval(ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex());
-        line = stream.getText(interval);
+        
+    }
+
+
+    @Override
+    public void enterID(shefParser.IDContext ctx) {
+        currentValueA = new ShefRecord.Builder(ctx.getText());
+    }
+
+    @Override
+    public void enterDATE(shefParser.DATEContext ctx) {
+        System.out.println("date is " + ctx.getText());
+        curDateA = new ShefDateTime.ShefDate(ctx.getText());
+    }
+
+    @Override
+    public void enterTZ(shefParser.TZContext ctx) {
+        tz = ctx.getText();
+        System.out.println("tz is " + ctx.getText());
+    }
+
+    @Override
+    public void enterTIMEFIELD(shefParser.TIMEFIELDContext ctx) {
+        System.out.println("time is " + ctx.getText());
+        String timeStr = ctx.getText();
+        ShefTime time = new ShefTime(true, timeStr.substring(0, 1), timeStr.substring(2));
+        currentValueA.withObservationTime(new ShefDateTime(curDateA, "UTC", time).getZonedDateTime());
+    }
+
+    @Override
+    public void enterPEFIELD(shefParser.PEFIELDContext ctx) {
+        if (ctx.getText().startsWith("D")) {
+            System.out.println("time is " + ctx.getText());
+            String timeStr = ctx.getText();
+            try {
+                ShefTime time = new ShefTime(true, timeStr.substring(0, 1), timeStr.substring(2));
+                currentValueA.withObservationTime(new ShefDateTime(curDateA, "UTC", time).getZonedDateTime());
+            } catch (Exception ex) {
+                System.out.println("Unabled to parse time in this statement");
+                //ex.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void exitTIMEFIELD(shefParser.TIMEFIELDContext ctx) {
         
     }
 
     @Override 
     public void exitA_FORMAT(shefParser.A_FORMATContext ctx) { 
-        //System.out.println("Finished A format.");
+        System.out.println("Finished A format.");
     }
 
     @Override

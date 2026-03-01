@@ -87,10 +87,10 @@ public class ShefRecord {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(station).append(("{"));
-        sb.append("observationTime=").append(observationTime.format(DateTimeFormatter.ISO_DATE_TIME)).append(",");
+        sb.append("observationTime=").append(observationTime !=null ? observationTime.format(DateTimeFormatter.ISO_DATE_TIME) : null).append(",");
         sb.append("peCode=").append(this.parameterCode).append(",");
         sb.append("value=").append(value).append(",");
-        sb.append("creationTime=").append(this.creationTime.format(DateTimeFormatter.ISO_DATE_TIME)).append(",");
+        sb.append("creationTime=").append(creationTime != null ? this.creationTime.format(DateTimeFormatter.ISO_DATE_TIME) : null).append(",");
         sb.append("durationCode=").append(this.durationCode).append(",");
         sb.append("typeCode=").append(this.typeCode).append(",");
         sb.append("sourceCode=").append(this.sourceCode).append(",");

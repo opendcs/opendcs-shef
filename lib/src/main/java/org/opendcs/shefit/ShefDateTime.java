@@ -26,12 +26,15 @@ public class ShefDateTime {
         private String dateStr;
 
         public ShefDate(String dateStr) {
-            this.dateStr = dateStr;
+            this.dateStr = dateStr.trim();
         }
 
         public LocalDate getLocalDate() {
+            System.out.println("Data Str: " + dateStr);
             int day = Integer.parseInt(dateStr.substring(dateStr.length()-2));
+            System.out.println("day " + day);
             String monthStr = dateStr.substring(dateStr.length()-4,dateStr.length()-2);
+            System.out.println("month " + monthStr);
             int month = Integer.parseInt(monthStr,10);
             int year = LocalDate.now().getYear();
             switch (dateStr.length()) {
@@ -40,7 +43,8 @@ public class ShefDateTime {
                     break;
                 }
                 case 6: { // decade only yymmdd
-                    year = (year%100) + Integer.parseInt(dateStr.substring(0,2));
+                    System.out.println("starting from " + year);
+                    year = (year - (year%100)) + Integer.parseInt(dateStr.substring(0,2));
                     break;
                 }
                 case 4: { // month day mmdd
@@ -50,6 +54,7 @@ public class ShefDateTime {
                     throw new RuntimeException("Date must be 4,6, or 8 digits. Got '" + dateStr + "'.");
                 }
             }
+            System.out.println("year is " + year);
             return LocalDate.of(year,month,day);
         }
     }
@@ -79,8 +84,14 @@ public class ShefDateTime {
 
         public LocalTime getTime() {
             int hours = Integer.parseInt(time.substring(0, 2),10);
-            int minutes = Integer.parseInt(time.substring(2, 4),10);
-            int seconds = Integer.parseInt(time.substring(4),10);
+            int minutes = 0;
+            int seconds  = 0;
+            if (time.length() > 2) {
+                minutes = Integer.parseInt(time.substring(2, 4),10);
+            }
+            if (time.length() > 4) {
+                seconds = Integer.parseInt(time.substring(4),10);
+            }
             return LocalTime.of(hours,minutes,seconds);
         }
     }
